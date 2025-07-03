@@ -15,6 +15,7 @@ This project implements a presence detection system using the ESP32-C3 microcont
 * Built with ESP-IDF and developed using Visual Studio Code
 
 **Project Structure**
+
 main  
 ├── CMakeLists.txt  
 └── main.c  
