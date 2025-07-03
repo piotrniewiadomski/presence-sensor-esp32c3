@@ -1,22 +1,22 @@
 # Presence sensor using ESP32-C3 and HLK-LD2410S
 
-##Overview
+## Overview
 
 This project implements a presence detection system using the ESP32-C3 microcontroller interfaced with the HLK-LD2410S presence sensor over UART. The device connects to a MQTT broker (e.g., Home Assistant) to publish presence status updates.
 
-##Power Management Strategy
+## Power Management Strategy
 * The ESP32-C3 runs in light sleep mode with the Wi-Fi connection maintained to balance low power consumption and responsiveness.
 * The sensor is powered continuously to allow instant presence detection with no delays.
 * The ESP32 wakes immediately on UART data received from the sensor, publishes the updated presence status over MQTT, then returns to light sleep awaiting the next event.
 
-##Key Features
+## Key Features
 * UART communication with HLK-LD2410S sensor
 * Wi-Fi management and connection handling
 * MQTT client integration for publishing sensor data
 * Modular component-based architecture for maintainability
 * Built with ESP-IDF and developed using Visual Studio Code
 
-##Project Structure
+## Project Structure
 
     main  
     ├── CMakeLists.txt  
