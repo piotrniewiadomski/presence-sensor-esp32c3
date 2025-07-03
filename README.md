@@ -1,32 +1,41 @@
-# _Sample project_
+# Presence sensor using ESP32-C3 and HLK-LD2410S
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+This project implements a presence detection system using the ESP32-C3 microcontroller with the HLK-LD2410S presence sensor connected via UART. The firmware initializes Wi-Fi, configures the sensor, keeps the  and publishes presence status updates to an MQTT broker (e.g., Home Assistant) — only sending messages when the sensor state changes to optimize network traffic.
 
-This is the simplest buildable example. The example is used by command `idf.py create-project`
-that copies the project to user specified path and set it's name. For more information follow the [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project)
+**Power Management Strategy**
+* The ESP32-C3 runs in light sleep mode with the Wi-Fi connection maintained to balance low power consumption and responsiveness.
+* The sensor is powered continuously to allow instant presence detection with no delays.
+* The ESP32 wakes immediately on UART data received from the sensor, publishes the updated presence status over MQTT, then returns to light sleep awaiting the next event.
 
+**Key Features**
+* UART communication with HLK-LD2410S sensor
+* Wi-Fi management and connection handling
+* MQTT client integration for publishing sensor data
+* Modular component-based architecture for maintainability
+* Built with ESP-IDF and developed using Visual Studio Code
 
-
-## How to use example
-We encourage the users to use the example as a template for the new projects.
-A recommended way is to follow the instructions on a [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project).
-
-## Example folder contents
-
-The project **sample_project** contains one source file in C language [main.c](main/main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both). 
-
-Below is short explanation of remaining files in the project folder.
-
-```
+**Project Structure**
+main
 ├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   └── main.c
-└── README.md                  This is the file you are currently reading
-```
-Additionally, the sample project contains Makefile and component.mk files, used for the legacy Make based build system. 
-They are not used or needed when building with CMake and idf.py.
+└── main.c
+components
+├── app_logic
+│   ├── app_logic.cpp
+│   ├── app_logic.hpp
+│   └── CMakeLists.txt
+├── mqtt_client
+│   ├── CMakeLists.txt
+│   ├── mqtt_publisher.c
+│   └── mqtt_publisher.h
+├── uart_hlk-ld2410s
+│   ├── CMakeLists.txt
+│   ├── uart_hlk-ld2410s.c
+│   └── uart_hlk-ld2410s.h
+└── wifi_manager
+    ├── CMakeLists.txt
+    ├── wifi_service.c
+    └── wifi_service.h
+CMakeLists.txt
+.gitattributes
+.gitignore
+README.md
