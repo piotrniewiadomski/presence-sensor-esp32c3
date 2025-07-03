@@ -15,27 +15,27 @@ This project implements a presence detection system using the ESP32-C3 microcont
 * Built with ESP-IDF and developed using Visual Studio Code
 
 **Project Structure**
-main
-├── CMakeLists.txt
-└── main.c
-components
-├── app_logic
-│   ├── app_logic.cpp
-│   ├── app_logic.hpp
-│   └── CMakeLists.txt
-├── mqtt_client
-│   ├── CMakeLists.txt
-│   ├── mqtt_publisher.c
-│   └── mqtt_publisher.h
-├── uart_hlk-ld2410s
-│   ├── CMakeLists.txt
-│   ├── uart_hlk-ld2410s.c
-│   └── uart_hlk-ld2410s.h
-└── wifi_manager
-    ├── CMakeLists.txt
-    ├── wifi_service.c
-    └── wifi_service.h
-CMakeLists.txt
-.gitattributes
-.gitignore
-README.md
+main  
+├── CMakeLists.txt  
+└── main.c  
+components  
+├── app_logic  
+│   ├── app_logic.cpp  
+│   ├── app_logic.hpp  
+│   └── CMakeLists.txt  
+├── mqtt_client  
+│   ├── CMakeLists.txt  
+│   ├── mqtt_publisher.c  
+│   └── mqtt_publisher.h  
+├── uart_hlk-ld2410s  
+│   ├── CMakeLists.txt  
+│   ├── uart_hlk-ld2410s.c  
+│   └── uart_hlk-ld2410s.h  
+└── wifi_manager  
+    ├── CMakeLists.txt  
+    ├── wifi_service.c  
+    └── wifi_service.h  
+CMakeLists.txt  
+.gitattributes  
+.gitignore  
+README.md  
