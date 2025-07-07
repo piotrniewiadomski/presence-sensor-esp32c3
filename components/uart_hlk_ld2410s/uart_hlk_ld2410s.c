@@ -1,4 +1,4 @@
-#include "uart_hlk-ld2410s.h"
+#include "uart_hlk_ld2410s.h"
 #include "driver/uart.h"
 #include "freertos/FreeRTOS.h"
 #include "esp_system.h"
