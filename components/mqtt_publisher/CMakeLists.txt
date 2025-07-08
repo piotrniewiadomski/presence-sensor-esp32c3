@@ -3,3 +3,5 @@ idf_component_register(
     INCLUDE_DIRS "."
     REQUIRES mqtt
 )
+
+set(CONFIG_KCONFIG_FILENAME "Kconfig")
