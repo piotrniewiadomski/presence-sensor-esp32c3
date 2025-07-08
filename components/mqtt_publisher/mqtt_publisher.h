@@ -1,3 +1,4 @@
+#include "stdbool.h"
 #ifndef MQTT_PUBLISHER_H
 #define MQTT_PUBLISHER_H
 
@@ -6,6 +7,7 @@ extern "C" {
 #endif
 
 void mqtt_init();
+void mqtt_publish_presence(bool presence);
 
 #ifdef __cplusplus
 }
