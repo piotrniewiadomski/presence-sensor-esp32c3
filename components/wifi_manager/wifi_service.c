@@ -26,7 +26,8 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
         ESP_ERROR_CHECK(esp_wifi_connect());
 
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
-        ESP_LOGW(TAG, "Wi-Fi disconnected. Reconnecting...");
+        wifi_event_sta_disconnected_t *disconn = (wifi_event_sta_disconnected_t *)event_data;
+        ESP_LOGW(TAG, "Wi-Fi disconnected. Reason: %d", disconn->reason);
         ESP_ERROR_CHECK(esp_wifi_connect());
 
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
@@ -38,6 +39,9 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
 // Wi-Fi initialization and power save setup
 static void wifi_power_save(void)
 {
+    esp_log_level_set("wifi", CONFIG_LOG_MAXIMUM_LEVEL);
+    esp_log_level_set("wifi_init", ESP_LOG_VERBOSE);
+
     ESP_LOGI(TAG, "Initializing Wi-Fi STA with power save...");
 
     ESP_ERROR_CHECK(esp_netif_init());
@@ -54,13 +58,22 @@ static void wifi_power_save(void)
         .sta = {
             .ssid = DEFAULT_SSID,
             .password = DEFAULT_PWD,
+            .threshold.authmode = WIFI_AUTH_WPA2_PSK,
+            .listen_interval = 3,
+            .pmf_cfg = {
+                .capable = false,
+                .required = false,
+            }
         },
     };
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
+    esp_wifi_set_protocol(WIFI_IF_STA, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G);
+    ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
     ESP_ERROR_CHECK(esp_wifi_start());
 
+    
     ESP_LOGI(TAG, "Setting power save mode to MIN_MODEM");
     ESP_ERROR_CHECK(wifi_ps_mode_min_modem());
 }
