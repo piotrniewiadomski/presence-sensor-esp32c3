@@ -5,9 +5,9 @@
 This project implements a presence detection system using the ESP32-C3 microcontroller interfaced with the HLK-LD2410S presence sensor over UART. The device connects to a MQTT broker (e.g., Home Assistant) to publish presence status updates.
 
 ## Power Management Strategy
-* The ESP32-C3 runs in light sleep mode with the Wi-Fi connection maintained to balance low power consumption and responsiveness.
+* The ESP32-C3 runs in normal mode with minimal modem power mode to maintain the Wi-Fi connection and save power consumption.
 * The sensor is powered continuously to allow instant presence detection with no delays.
-* The ESP32 wakes immediately on UART data received from the sensor, publishes the updated presence status over MQTT, then returns to light sleep awaiting the next event.
+* The ESP32 leaves the minimal modem power mode immediately on presence status change detected from data received via UART from the sensor, publishes the updated presence status over MQTT, then returns to the minimal modem power mode awaiting the next change.
 
 ## Key Features
 * UART communication with HLK-LD2410S sensor
@@ -21,23 +21,25 @@ This project implements a presence detection system using the ESP32-C3 microcont
     main  
     ├── CMakeLists.txt  
     └── main.c  
-    components  
-    ├── app_logic  
-    │   ├── app_logic.cpp  
-    │   ├── app_logic.hpp  
-    │   └── CMakeLists.txt  
-    ├── mqtt_client  
-    │   ├── CMakeLists.txt  
-    │   ├── mqtt_publisher.c  
-    │   └── mqtt_publisher.h  
-    ├── uart_hlk-ld2410s  
-    │   ├── CMakeLists.txt  
-    │   ├── uart_hlk-ld2410s.c  
-    │   └── uart_hlk-ld2410s.h  
-    └── wifi_manager  
-        ├── CMakeLists.txt  
-        ├── wifi_service.c  
-        └── wifi_service.h  
+    components
+    ├── app_logic
+    │   ├── app_logic.cpp
+    │   ├── app_logic.hpp
+    │   └── CMakeLists.txt
+    ├── mqtt_publisher
+    │   ├── CMakeLists.txt
+    │   ├── Kconfig.projbuild
+    │   ├── mqtt_publisher.c
+    │   └── mqtt_publisher.h
+    ├── uart_hlk_ld2410s
+    │   ├── CMakeLists.txt
+    │   ├── uart_hlk_ld2410s.c
+    │   └── uart_hlk_ld2410s.h
+    └── wifi_manager
+        ├── CMakeLists.txt
+        ├── Kconfig.projbuild
+        ├── wifi_service.c
+        └── wifi_service.h 
     CMakeLists.txt  
     .gitattributes  
     .gitignore  
