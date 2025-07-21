@@ -1,11 +1,7 @@
 #include "uart_hlk_ld2410s.h"
-#include "driver/uart.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
-#include "esp_log.h"
-#include <string.h>
 
+#include "driver/uart.h"
+#include "esp_log.h"
 
 #define UART_TX_PIN 4
 #define UART_RX_PIN 5
