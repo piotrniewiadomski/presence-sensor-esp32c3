@@ -18,7 +18,7 @@ This project implements a presence detection system using the ESP32-C3 microcont
 ## Set up
 - Written, built and flashed with ESP-IDF v5.5-rc1-dirty and ESP-IDF VSCode extension.
 - Board used is ESP32-C3 Super Mini.
-- MQTT's and Wifi's congiruations set via: idf.py menuconfig.
+- MQTT's and Wifi's configurations set via `idf.py menuconfig`
 - When the module and the ESP32 are powered on, the module is send a command to automatically set the energy thresholds for all the gates and while this process takes place, one should keep any bodies or items, that should be later detected, away from the module's sensor range.
 
 ## Project Structure
