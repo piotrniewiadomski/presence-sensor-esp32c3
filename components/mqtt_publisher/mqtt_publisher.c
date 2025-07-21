@@ -6,14 +6,13 @@
 static const char *TAG = "mqtt_publisher";
 static esp_mqtt_client_handle_t client = NULL;
 
-void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
-{
+void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data) {
+
     esp_mqtt_event_handle_t event = event_data;
 
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
             ESP_LOGI(TAG, "MQTT Connected");
-            mqtt_publish_presence(false);
             break;
         case MQTT_EVENT_DISCONNECTED:
             ESP_LOGW(TAG, "MQTT Disconnected");
@@ -23,8 +22,8 @@ void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event
     }
 }
 
-void mqtt_init(void)
-{
+void mqtt_init(void) {
+
     esp_mqtt_client_config_t mqtt_cfg = {
         .broker.address.uri = CONFIG_MQTT_BROKER_URI,
         .credentials.username = CONFIG_MQTT_USERNAME,
@@ -36,12 +35,16 @@ void mqtt_init(void)
     esp_mqtt_client_start(client);
 }
 
-void mqtt_publish_presence(bool presence)
-{
+void mqtt_publish_presence(bool presence) {
+
     if (client == NULL) return;
 
     const char *topic = "home/presence/esp32c3";
     const char *msg = presence ? "ON" : "OFF";
-
+    ESP_LOGI(TAG, "Presence: %d", (presence ? 1 : 0));
     esp_mqtt_client_publish(client, topic, msg, 0, 1, 1);
+}
+
+bool mqtt_connected() {
+    return (client != NULL) ? true : false;
 }

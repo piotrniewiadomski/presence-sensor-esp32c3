@@ -8,6 +8,7 @@ extern "C" {
 
 void mqtt_init();
 void mqtt_publish_presence(bool presence);
+bool mqtt_connected();
 
 #ifdef __cplusplus
 }
