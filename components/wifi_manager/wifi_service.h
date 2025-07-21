@@ -1,5 +1,3 @@
-#include "esp_err.h"
-
 #ifndef WIFI_SERVICE_H
 #define WIFI_SERVICE_H
 
