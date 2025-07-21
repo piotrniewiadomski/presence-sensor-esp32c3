@@ -1,4 +1,5 @@
 #include "stdbool.h"
+
 #ifndef MQTT_PUBLISHER_H
 #define MQTT_PUBLISHER_H
 
