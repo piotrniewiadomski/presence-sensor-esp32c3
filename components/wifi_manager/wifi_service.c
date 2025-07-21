@@ -18,14 +18,9 @@ static EventGroupHandle_t s_wifi_event_group;
 
 static const char *TAG = "wifi_service";
 
-// Forward declarations
-esp_err_t wifi_ps_mode_min_modem();
-esp_err_t wifi_ps_mode_none();
-
 // Wi-Fi event handler
-static void wifi_event_handler(void *arg, esp_event_base_t event_base,
-                               int32_t event_id, void *event_data)
-{
+static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t event_id, void *event_data) {
+
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         ESP_LOGI(TAG, "Wi-Fi started. Connecting...");
         ESP_ERROR_CHECK(esp_wifi_connect());
@@ -42,13 +37,16 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base,
     }
 }
 
-// Wi-Fi initialization and power save setup
-static void wifi_power_save(void)
-{
-    esp_log_level_set("wifi", CONFIG_LOG_MAXIMUM_LEVEL);
-    esp_log_level_set("wifi_init", ESP_LOG_VERBOSE);
-
-    ESP_LOGI(TAG, "Initializing Wi-Fi STA with power save");
+// Main Wi-Fi init entry point
+void wifi_init() {
+    ESP_LOGI(TAG, "Initializing NVS...");
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_LOGW(TAG, "NVS Flash full or incompatible. Erasing...");
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(ret);
     
     s_wifi_event_group = xEventGroupCreate();
     assert(s_wifi_event_group != NULL);
@@ -82,11 +80,7 @@ static void wifi_power_save(void)
     ESP_ERROR_CHECK(esp_wifi_set_ps(WIFI_PS_NONE));
     ESP_ERROR_CHECK(esp_wifi_start());
 
-    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group,
-                                        WIFI_CONNECTED_BIT,
-                                        pdFALSE,
-                                        pdTRUE,
-                                        portMAX_DELAY);
+    EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, pdFALSE, pdTRUE, portMAX_DELAY);
 
     if (bits & WIFI_CONNECTED_BIT) {
         ESP_LOGI("wifi", "connected to ap");
@@ -95,36 +89,4 @@ static void wifi_power_save(void)
     } else {
         ESP_LOGE("wifi", "UNEXPECTED EVENT");
     }
-    
-    ESP_LOGI(TAG, "Setting power save mode to MIN_MODEM");
-    ESP_ERROR_CHECK(wifi_ps_mode_min_modem());
-}
-
-// Main Wi-Fi init entry point
-void wifi_init()
-{
-    ESP_LOGI(TAG, "Initializing NVS...");
-    esp_err_t ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_LOGW(TAG, "NVS Flash full or incompatible. Erasing...");
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
-    ESP_ERROR_CHECK(ret);
-
-    wifi_power_save();
-}
-
-// Set Wi-Fi to minimum modem power save
-esp_err_t wifi_ps_mode_min_modem()
-{
-    ESP_LOGI(TAG, "Wi-Fi power save: MIN_MODEM");
-    return esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
-}
-
-// Disable Wi-Fi power save
-esp_err_t wifi_ps_mode_none()
-{
-    ESP_LOGI(TAG, "Wi-Fi power save: NONE");
-    return esp_wifi_set_ps(WIFI_PS_NONE);
 }
