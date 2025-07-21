@@ -1,11 +1,13 @@
 #include "app_logic.hpp"
+
+#include "mqtt_publisher.h"
+#include "wifi_service.h"
+#include "uart_hlk_ld2410s.h"
+
 #include "esp_sleep.h"
 #include "freertos/FreeRTOS.h"
 #include "driver/gpio.h"
 #include "esp_log.h"
-#include "mqtt_publisher.h"
-#include "wifi_service.h"
-#include "uart_hlk_ld2410s.h"
 
 #define PRESENCE_PIN GPIO_NUM_3
 
@@ -36,7 +38,7 @@ void app_logic_main(void) {
             first_boot_done = true;
             ESP_LOGI(TAG, "First boot init done");
         } else {
-            ESP_LOGI(TAG, "Wake up from deep sleep, by presence level: %d", presence_level);
+            ESP_LOGI(TAG, "Woke up from deep sleep, by presence level: %d", presence_level);
             wifi_init();
             mqtt_init();
             while(!mqtt_connected());
@@ -46,7 +48,7 @@ void app_logic_main(void) {
         vTaskDelay(pdMS_TO_TICKS(50));
         wait_for_high = !presence_level;
 
-        ESP_LOGI(TAG, "Setting wakeup to %s", wait_for_high ? "HIGH" : "LOW");
+        ESP_LOGI(TAG, "Setting GPIO wake up level to %s", wait_for_high ? "HIGH" : "LOW");
         esp_deep_sleep_enable_gpio_wakeup((1 << PRESENCE_PIN), wait_for_high ? ESP_GPIO_WAKEUP_GPIO_HIGH : ESP_GPIO_WAKEUP_GPIO_LOW);
 
         presence_level = gpio_get_level(PRESENCE_PIN);
