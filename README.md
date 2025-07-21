@@ -1,13 +1,12 @@
 # Presence sensor using ESP32-C3 and HLK-LD2410S
 
 ## Overview
-
 This project implements a presence detection system using the ESP32-C3 microcontroller interfaced with the HLK-LD2410S presence sensor over UART. The device connects to a MQTT broker (e.g., Home Assistant) to publish presence status updates.
 
 ## Power Management Strategy
-* The ESP32-C3 runs in normal mode with minimal modem power mode to maintain the Wi-Fi connection and save power consumption.
+* The ESP32-C3 runs in deep sleep power mode most of the time.
 * The sensor is powered continuously to allow instant presence detection with no delays.
-* The ESP32 leaves the minimal modem power mode immediately on presence status change detected from data received via UART from the sensor, publishes the updated presence status over MQTT, then returns to the minimal modem power mode awaiting the next change.
+* The ESP32 wakes up from deep sleep immediately on presence status change detected from OT2 sensor pin, publishes the updated presence status over MQTT, then returns to the deep sleep awaiting the next OT2 output pin level change.
 
 ## Key Features
 * UART communication with HLK-LD2410S sensor
@@ -16,8 +15,13 @@ This project implements a presence detection system using the ESP32-C3 microcont
 * Modular component-based architecture for maintainability
 * Built with ESP-IDF and developed using Visual Studio Code
 
-## Project Structure
+## Set up
+- Written, built and flashed with: ESP-IDF v5.5-rc1-dirty.
+- Board used: ESP32-C3 Super Mini
+- MQTT's and Wifi's congiruations set via: idf.py menuconfig
+- When the sensor and the ESP32 are powered on, the sensor is send a command to automatically set the energy thresholds for all the gates and while this process takes place, one should keep any bodies or items, that should be later detected, away from the sensor's range.
 
+## Project Structure
     main  
     ├── CMakeLists.txt  
     └── main.c  
@@ -40,6 +44,9 @@ This project implements a presence detection system using the ESP32-C3 microcont
         ├── Kconfig.projbuild
         ├── wifi_service.c
         └── wifi_service.h 
+    .devcontainer
+    ├── devcontainer.json
+    └── Dockerfile
     CMakeLists.txt  
     .gitattributes  
     .gitignore  
