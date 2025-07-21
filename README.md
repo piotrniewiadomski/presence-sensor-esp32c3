@@ -1,4 +1,4 @@
-# Presence module using ESP32-C3 and HLK-LD2410S
+# Presence sensor made with ESP32-C3 and HLK-LD2410S
 
 ## Overview
 This project implements a presence detection system using the ESP32-C3 microcontroller interfaced with the 24G ultra low-power radar sensing module HLK-LD2410S over UART. The device connects to a MQTT broker (e.g., Home Assistant) to publish presence status updates.
