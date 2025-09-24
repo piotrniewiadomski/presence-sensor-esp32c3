@@ -33,6 +33,7 @@ void app_logic_main(void) {
         if (!first_boot_done) {
             presence_sensor_init();
             wifi_init();
+            while(!wifi_is_connected());
             mqtt_init();
             while(!mqtt_connected());
             first_boot_done = true;
@@ -40,6 +41,7 @@ void app_logic_main(void) {
         } else {
             ESP_LOGI(TAG, "Woke up from deep sleep, by presence level: %d", presence_level);
             wifi_init();
+            while(!wifi_is_connected());
             mqtt_init();
             while(!mqtt_connected());
         }

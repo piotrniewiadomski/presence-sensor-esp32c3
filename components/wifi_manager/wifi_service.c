@@ -34,6 +34,11 @@ static void wifi_event_handler(void *arg, esp_event_base_t event_base, int32_t e
     }
 }
 
+bool wifi_is_connected(void) {
+    EventBits_t bits = xEventGroupGetBits(s_wifi_event_group);
+    return (bits & WIFI_CONNECTED_BIT) != 0;
+}
+
 // Main Wi-Fi init entry point
 void wifi_init() {
     ESP_LOGI(TAG, "Initializing NVS...");
